@@ -74,19 +74,30 @@ function onArticleClick(e)
 }
 
 let searchResults = false;
-function search() 
+
+function search()
+{
+  const query = $("#search-bar").value;
+  const sygnatura = $("#sygnatura").value;
+  const sad = $("#sad").value;
+  const rodzajOrzeczenia = $("#rodzaj-orzeczenia").value;
+  const symbolSprawy = $("#symbol-sprawy").value;
+
+  console.log(query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy)
+  displayResults();
+}
+
+async function displayResults() 
 {
     searchResults = true;
     $(".page-header").style.marginTop = "2%";
     $(".search-result-list").innerHTML = ""
-    setTimeout(()=>{
-        for ( let i = 0; i<data.length; i++ ) {
-            setTimeout(() => {
-                let p = document.createElement("div");
-                p.innerHTML = generateArticle(data[i].title, data[i].description, data[i].description)
-                $(".search-result-list").appendChild(p);
-            }
-            , 100 * i)
+    for ( let i = 0; i<data.length; i++ ) {
+        await setTimeout(() => {
+            let p = document.createElement("div");
+            p.innerHTML = generateArticle(data[i].title, data[i].description, data[i].description)
+            $(".search-result-list").appendChild(p);
         }
-    },300) 
+        , 200)
+    } 
 }
