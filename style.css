@@ -122,3 +122,23 @@ body::-webkit-scrollbar{
 .search-result-element .opened {
     height: 100%;
 }
+
+.no-results {
+    font-size: 25px;
+    margin-top: 145px;
+    text-align: center;
+    width: 100%;
+}
+
+.search-result-found-count {
+    width: 100%;
+    font-size: 12px;
+    text-align: center;
+    padding: 15px;
+    color: rgb(153, 153, 153);
+}
+
+#pagination-nav {
+    margin-top: 40px;
+    margin-bottom: 100px;
+}
