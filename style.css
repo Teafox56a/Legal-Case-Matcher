@@ -13,20 +13,30 @@ body::-webkit-scrollbar{
     display: flex;
     align-items: center;
     flex-direction: column;
+    position: absolute;
+    top: 35%;
+    left: 0;
+    transition: all 300ms ease-in-out;
 }
 
 
 .page-header { 
+    z-index: 99999;
+    position: fixed;
     width: 100%;
     display: flex;
     align-items: center;
     flex-direction: column;
     margin-top: 20%;
-    transition: all 1700ms cubic-bezier(0.075, 0.82, 0.165, 1);
+    /* transition: all 1700ms cubic-bezier(0.075, 0.82, 0.165, 1),  */
+    transition: width 300ms ease-in-out;
     padding: 25px;
+    -webkit-box-shadow: 0px 0px 26px -20px rgba(66, 68, 90, 1);
+    -moz-box-shadow: 0px 0px 26px -20px rgba(66, 68, 90, 1);
+    box-shadow: 0px 0px 26px -20px rgba(66, 68, 90, 1);
     background-color: rgb(251, 249, 249);
-    border-top: 1px solid rgb(227, 226, 226);
-    border-bottom: 1px solid rgb(227, 226, 226);
+    border: 1px solid rgb(227, 226, 226);
+    /* border-bottom: 1px solid rgb(227, 226, 226); */
 }
 
 .page-content-on-top {
@@ -34,16 +44,22 @@ body::-webkit-scrollbar{
 }
 
 .search-result-list {
-    width: 50%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .search-result-element {
-    width: 100%;
+    width: 50%;
+    min-width: 45vw;
     border: 1px solid rgb(227, 226, 226);
     border-radius: 4px;
     padding: 15px 5px 15px 5px;
     transition: all 100ms linear;
     margin-top: 25px;
+    height: 120px;
 }
 
 @keyframes fadeIn {
@@ -141,4 +157,53 @@ body::-webkit-scrollbar{
 #pagination-nav {
     margin-top: 40px;
     margin-bottom: 100px;
+}
+
+.article-lookup {
+    width: 50%;
+    position: fixed;
+    right: -50%;
+    top: 15px;
+    border: 1px solid rgb(227, 226, 226);
+    height: 90%;
+    padding: 15px;
+    border-radius: 8px;
+    -webkit-box-shadow: 0px 0px 26px -20px rgba(66, 68, 90, 1);
+    -moz-box-shadow: 0px 0px 26px -20px rgba(66, 68, 90, 1);
+    box-shadow: 0px 0px 26px -20px rgba(66, 68, 90, 1);
+    transition: all 200ms ease-in-out;
+}
+
+.article-lookup h2 {
+    font-weight: bold;
+}
+
+.article-hide-btn {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    font-size: 2rem;
+    color: black;
+    transition: all 50ms linear;
+}
+
+.article-hide-btn:hover {
+    cursor: pointer;
+    color: rgb(207, 207, 207);
+    font-size: 2.1rem;
+}
+
+.article-bookmark-btn {
+    position: absolute;
+    right: 60px;
+    top: 5px;
+    font-size: 2rem;
+    color: black;
+    transition: all 50ms linear;
+}
+
+.article-bookmark-btn:hover {
+    cursor: pointer;
+    color: rgb(207, 207, 207);
+    font-size: 2.1rem;
 }

@@ -5,7 +5,7 @@ $("#search-bar").addEventListener("keypress", e => {
 
 let moreOptionsOpen = false;
 $(".more-options-button").addEventListener("click", () => {
-    if ( !searchResults ) $(".page-header").style.marginTop = moreOptionsOpen ? "20%" : "10%";
+    if ( !searchResults ) $(".page-header").style.top = moreOptionsOpen ? "20%" : "10%";
     // $(".more-options").style.padding = moreOptionsOpen ? "0" : "15px";
     $(".more-options").style.height = moreOptionsOpen ? "0px" : "100%";
     // $(".more-options").style.borderWidth = moreOptionsOpen ? "0" : "1px";
@@ -56,6 +56,22 @@ let data = [
     }
 ]
 
+function showArticle()
+{
+  $(".article-lookup").style.right = "25px";
+  $(".page-content").style.width = "47%";
+  $(".page-content").style.left = "15px";
+  $(".page-header").style.width = "47%";
+}
+
+function hideArticle()
+{
+  $(".article-lookup").style.right = "-50%";
+  $(".page-content").style.width = "100%";
+  $(".page-content").style.left = "0";
+  $(".page-header").style.width = "100%";
+}
+
 function generateArticle(title, description, more)
 { 
     return `<div onclick="onArticleClick(event)" class="search-result-element search-result-element-transition">
@@ -82,27 +98,29 @@ function releasePageBusy()
 
 function onArticleClick(e)
 {
-  if (e.currentTarget.childNodes[5].classList.contains("opened")) {
-    e.currentTarget.childNodes[5].classList.remove("opened")
-  } else {
-    e.currentTarget.childNodes[5].classList.add("opened")
-  }
+  showArticle();
+  // if (e.currentTarget.childNodes[5].classList.contains("opened")) {
+  //   e.currentTarget.childNodes[5].classList.remove("opened")
+  // } else {
+  //   e.currentTarget.childNodes[5].classList.add("opened")
+  // }
 }
 
 async function fetchQuery(query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy)
 {
-  const receivedData = await (fetch(
-    `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=0&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC`
-  ).then( e => e.json() ))
-  totalItemsCount = receivedData.info.totalResults;
-  data = [];
-  console.log(receivedData)
-  for ( const block of receivedData.items ) {
-    let ob = {}
-    ob["title"] = block.courtCases.map(e=>e.caseNumber).join("; ")
-    ob["description"] = block.textContent
-    data.push(ob)
-  }
+  totalItemsCount = 10;
+  // const receivedData = await (fetch(
+    // `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=0&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC`
+  // ).then( e => e.json() ))
+  // totalItemsCount = receivedData.info.totalResults;
+  // data = [];
+  // console.log(receivedData)
+  // for ( const block of receivedData.items ) {
+  //   let ob = {}
+  //   ob["title"] = block.courtCases.map(e=>e.caseNumber).join("; ")
+  //   ob["description"] = block.textContent
+  //   data.push(ob)
+  // }
 }
 
 let searchResults = false;
@@ -128,15 +146,15 @@ function onlyUnique(value, index, array) {
 function generatePaddingButtons(selectedPage, maxSize, range)
 {
   // const allPages = [...(new Array(maxSize))].map((_,i)=>i+1);
-  let idx = selectedPage-1;
-  let r = Math.floor(range/2);
-  let l = range - r;
-  let idxRight = Math.min(idx + r, maxSize);
-  let idxLeft = Math.max(idx - l, 1);
   let res = []
-  for ( let i = idxLeft; i<=idxRight; i++ ) {
-    res.push(i);
+  for ( let i = 0; i<=5; i++ ) {
+    if ( selectedPage + i > maxSize ) continue; 
+    res.push(selectedPage + i);
   }
+  for ( let i = 1; i<range-res.length; i++ ) {
+    if ( selectedPage - i < 1 ) continue;
+    res.push(selectedPage - i)
+  } 
   res.push(1);
   res.push(maxSize);
   res = res.sort((a,b)=>a-b);
@@ -148,7 +166,7 @@ async function displayResults()
 {
     releasePageBusy()
     searchResults = true;
-    $(".page-header").style.marginTop = "2%";
+    $(".page-header").style.marginTop = "0%";
     $(".search-result-list").innerHTML = ""
     if ( data.length == 0 ) {
       $(".search-result-list").innerHTML = `<div class="no-results"> Nic nie znaleziono... </div>`
@@ -156,8 +174,8 @@ async function displayResults()
       for ( let i = 0; i<data.length; i++ ) {
         await setTimeout(() => {
               let p = document.createElement("div");
-              p.innerHTML = generateArticle(data[i].title, data[i].description, data[i].description)
-              $(".search-result-list").appendChild(p);
+              p.innerHTML = generateArticle(data[i].title, data[i].description, "")
+              $(".search-result-list").appendChild(p.firstChild);
           }
           , 200)
       }
@@ -178,3 +196,13 @@ async function displayResults()
     }
     
 }
+
+let lastScroll = window.scrollY;
+addEventListener("scroll", (event) => {
+  let delta = window.scrollY - lastScroll;
+  lastScroll = window.scrollY ;
+  let lastTop = Number($(".page-header").style.top.replace("px", ""));
+  let newTop = Math.max( -300, lastTop - delta );
+  newTop = Math.min(0, newTop);
+  $(".page-header").style.top = `${newTop}px`;
+});
