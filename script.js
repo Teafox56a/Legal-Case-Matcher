@@ -20,7 +20,7 @@ let doNotLoadOnScroll = false;
 
 function showArticle()
 {
-  $(".article-lookup").style.right = "25px";
+  $(".article-wrapper").style.right = "25px";
   $(".page-content").style.width = "47%";
   $(".page-content").style.left = "15px";
   $(".page-header").style.width = "47%";
@@ -28,7 +28,7 @@ function showArticle()
 
 function hideArticle()
 {
-  $(".article-lookup").style.right = "-50%";
+  $(".article-wrapper").style.right = "-50%";
   $(".page-content").style.width = "100%";
   $(".page-content").style.left = "0";
   $(".page-header").style.width = "100%";
@@ -79,13 +79,13 @@ async function fetchQuery(query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy)
 {
   // totalItemsCount = 10;
   lastQueryData = [query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy];
-  const receivedData = await (fetch(
-    `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=${lastPage}&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC`
-  ).then( e => e.json() ))
+  // const receivedData = await (fetch(
+  //   `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=${lastPage}&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC`
+  // ).then( e => e.json() ))
   // const receivedData = await (fetch(
   //   `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=0&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC`
   // ).then( e => e.json() ))
-  // const receivedData = dummyData;
+  const receivedData = dummyData;
   totalItemsCount = receivedData.info.totalResults;
   data = [];
   console.log(receivedData)

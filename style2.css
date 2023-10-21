@@ -1,9 +1,19 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css");
 @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&display=swap');
 a { text-decoration: none; color: inherit; }
-html, body { height: 100%; width: 100%; margin: 0; font-family: 'Nunito', sans-serif;}
+html, body { 
+    height: 100%; width: 100%; margin: 0; font-family: 'Nunito', sans-serif; 
+    background-color: var(--primary);
+    color: var(--dark) !important;
+}
 body::-webkit-scrollbar{
     display: none;
+}
+
+input, select, label, span {
+    background-color: var(--primary) !important;
+    outline-color: var(--dark) !important;
+    border-color: var(--dark) !important;
 }
 
 .page-content {
@@ -30,13 +40,9 @@ body::-webkit-scrollbar{
     /* transition: all 1700ms cubic-bezier(0.075, 0.82, 0.165, 1),  */
     transition: width 300ms ease-in-out;
     padding: 25px;
-    /* -webkit-box-shadow: 0px 0px 26px -20px rgba(66, 68, 90, 1); */
-    /* -moz-box-shadow: 0px 0px 26px -20px rgba(66, 68, 90, 1); */
-    /* box-shadow: 0px 0px 26px -20px rgba(66, 68, 90, 1); */
-    /* background-color: rgb(251, 249, 249); */
-    /* border: 1px solid rgb(227, 226, 226); */
-    border-bottom: 1px solid rgb(227, 226, 226);
-    background-color: white;
+    border-bottom: 1px solid var(--fourth);
+    background-color: var(--primary);
+    
 }
 
 .page-content-on-top {
@@ -54,13 +60,16 @@ body::-webkit-scrollbar{
 .search-result-element {
     width: 50%;
     min-width: 45vw;
-    border: 1px solid rgb(227, 226, 226);
+    border: 1px solid var(--fourth);
     border-radius: 4px;
     padding: 25px 10px 25px 10px;
     transition: all 100ms linear;
     margin-top: 25px;
     height: 160px;
     overflow: hidden;
+    -webkit-box-shadow: 0px 0px 26px -20px rgba(66, 68, 90, 1);
+    -moz-box-shadow: 0px 0px 26px -20px rgba(66, 68, 90, 1);
+    box-shadow: 0px 0px 26px -20px rgba(66, 68, 90, 1);
 }
 
 @keyframes fadeIn {
@@ -87,7 +96,7 @@ body::-webkit-scrollbar{
     width: 100%;
     text-overflow: clip;
     padding-bottom: 8px;
-    border-bottom: 1px solid rgb(227, 226, 226);
+    border-bottom: 1px solid var(--fourth);
     font-size: 24px;
 }
 
@@ -97,7 +106,7 @@ body::-webkit-scrollbar{
 
 .more-options-button {
     margin-top: 25px;
-    border-bottom: 1px solid rgb(227, 226, 226);
+    border-bottom: 1px solid var(--fourth);
 }
 
 .more-options-button:hover {
@@ -109,20 +118,20 @@ body::-webkit-scrollbar{
     transition: all 200ms linear;
     transition: height 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
     overflow: hidden;
-    /* border: 1px solid rgb(227, 226, 226); */
+    /* border: 1px solid var(--fourth); */
     width: 50%;
     /* padding: 15px; */
     margin-top: 15px;
 }
 
 .small-text-input {
-    border: 1px solid rgb(227, 226, 226);
+    border: 1px solid var(--fourth);
     padding: 5px;
     border-radius: 5px;
 }
 
 .small-text-input:active .small-text-input:focus {
-    border: 1px solid rgb(227, 226, 226);
+    border: 1px solid var(--fourth);
     outline: none;
 }
 
@@ -172,7 +181,7 @@ body::-webkit-scrollbar{
 
 .article-lookup {
     width: 100%;
-    border: 1px solid rgb(227, 226, 226);
+    border: 1px solid var(--fourth);
     height: 100%;
     padding: 15px;
     border-radius: 8px;
@@ -180,6 +189,7 @@ body::-webkit-scrollbar{
     -moz-box-shadow: 0px 0px 26px -20px rgba(66, 68, 90, 1);
     box-shadow: 0px 0px 26px -20px rgba(66, 68, 90, 1);
     overflow-y: scroll;
+    z-index: 99999999999999999999999999999;
 }
 
 .article-lookup::-webkit-scrollbar{
@@ -199,30 +209,30 @@ body::-webkit-scrollbar{
     align-items: flex-end;
     justify-content: flex-end;
     gap: 15px;
-    background-color: white;
+    /* background-color: var(--primary); */
 }
 
 .article-hide-btn {
     font-size: 2rem;
-    color: black;
+    color: var(--dark);
     transition: all 50ms linear;
 }
 
 .article-hide-btn:hover {
     cursor: pointer;
-    color: rgb(207, 207, 207);
+    color: var(--fourth);
     font-size: 2.1rem;
 }
 
 .article-bookmark-btn {
     font-size: 2rem;
-    color: black;
+    color: var(--dark);
     transition: all 50ms linear;
 }
 
 .article-bookmark-btn:hover {
     cursor: pointer;
-    color: rgb(207, 207, 207);
+    color: var(--fourth);
     font-size: 2.1rem;
 }
 
@@ -235,7 +245,7 @@ body::-webkit-scrollbar{
     top: 15px;
     width: 300px;
     height: 100px;
-    color: white;
+    color: var(--primary);
     -webkit-box-shadow: 0px 0px 14px 0px rgba(90, 92, 111, 0.33);
     -moz-box-shadow: 0px 0px 14px 0px rgba(90, 92, 111, 0.33);
     box-shadow: 0px 0px 14px 0px rgba(90, 92, 111, 0.33);
