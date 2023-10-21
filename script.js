@@ -5,13 +5,14 @@ $("#search-bar").addEventListener("keypress", e => {
 
 let moreOptionsOpen = false;
 $(".more-options-button").addEventListener("click", () => {
-    if ( !searchResults ) $(".page-header").style.top = moreOptionsOpen ? "20%" : "10%";
+    // if ( !searchResults ) $(".page-header").style.top = moreOptionsOpen ? "20%" : "10%";
     // $(".more-options").style.padding = moreOptionsOpen ? "0" : "15px";
     $(".more-options").style.height = moreOptionsOpen ? "0px" : "100%";
     // $(".more-options").style.borderWidth = moreOptionsOpen ? "0" : "1px";
     moreOptionsOpen=!moreOptionsOpen;
 });
 
+let lastPage = 0;
 let totalItemsCount = 0;
 let data = [
     {
@@ -86,7 +87,7 @@ function lockPageBusy()
   $("#search-bar").disabled = true;
   $("#search-bar-icon").childNodes[1].hidden = true;
   $("#search-bar-icon").childNodes[3].hidden = false;
-  $("#pagination-nav").hidden = true;
+  $(".search-result-list").innerHTML += `<div hidden style="width: 1.5rem; height: 1.5rem;" class="spinner-border text-secondary" role="status"></div> `
 }
 
 function releasePageBusy()
@@ -106,26 +107,39 @@ function onArticleClick(e)
   // }
 }
 
+lastQueryData = [];
+
 async function fetchQuery(query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy)
 {
-  totalItemsCount = 10;
-  // const receivedData = await (fetch(
-    // `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=0&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC`
-  // ).then( e => e.json() ))
-  // totalItemsCount = receivedData.info.totalResults;
-  // data = [];
-  // console.log(receivedData)
-  // for ( const block of receivedData.items ) {
-  //   let ob = {}
-  //   ob["title"] = block.courtCases.map(e=>e.caseNumber).join("; ")
-  //   ob["description"] = block.textContent
-  //   data.push(ob)
-  // }
+  // totalItemsCount = 10;
+  lastQueryData = [query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy];
+  const receivedData = await (fetch(
+    `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=${lastPage}&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC`
+  ).then( e => e.json() ))
+  totalItemsCount = receivedData.info.totalResults;
+  data = [];
+  console.log(receivedData)
+  for ( const block of receivedData.items ) {
+    let ob = {}
+    ob["title"] = block.courtCases.map(e=>e.caseNumber).join("; ")
+    ob["description"] = block.textContent
+    data.push(ob)
+  }
+}
+
+async function loadAnotherPage()
+{
+  lockPageBusy();
+  lastPage++;
+  await fetchQuery(...lastQueryData);
+  displayResults(false);
+  popAlert("Załadowano","załadowano dodatkowe orzeczenia", 5000)
 }
 
 let searchResults = false;
 function search()
 {
+  lastPage = 0;
   lockPageBusy();
   const query = $("#search-bar").value;
   const sygnatura = $("#sygnatura").value;
@@ -137,13 +151,12 @@ function search()
   
 }
 
-let selectedPage = 1;
 
 function onlyUnique(value, index, array) {
   return array.indexOf(value) === index;
 }
 
-function generatePaddingButtons(selectedPage, maxSize, range)
+function generatePaginationButtons(selectedPage, maxSize, range)
 {
   // const allPages = [...(new Array(maxSize))].map((_,i)=>i+1);
   let res = []
@@ -162,39 +175,35 @@ function generatePaddingButtons(selectedPage, maxSize, range)
   return res;
 }
 
-async function displayResults() 
+async function displayResults(clearPrevious=true) 
 {
     releasePageBusy()
     searchResults = true;
-    $(".page-header").style.marginTop = "0%";
-    $(".search-result-list").innerHTML = ""
+    if ( clearPrevious ) $(".page-header").style.marginTop = "0%";
+    if ( clearPrevious ) $(".search-result-list").innerHTML = ""
     if ( data.length == 0 ) {
       $(".search-result-list").innerHTML = `<div class="no-results"> Nic nie znaleziono... </div>`
     } else {
       for ( let i = 0; i<data.length; i++ ) {
-        await setTimeout(() => {
+        await setTimeout(
+          () => {
               let p = document.createElement("div");
               p.innerHTML = generateArticle(data[i].title, data[i].description, "")
               $(".search-result-list").appendChild(p.firstChild);
           }
-          , 200)
+          , 200*i)
       }
-      setTimeout( () => { 
-        $("#pagination-nav .pagination").innerHTML = "";
-        $("#pagination-nav .pagination").innerHTML += 
-        `<li class="page-item"><a class="page-link" href="#">1</a></li>`
-        for ( let i = 1; i<8; i++ ) {
-          $("#pagination-nav .pagination").innerHTML += 
-          `<li class="page-item"><a class="page-link" href="#">${selectedPage+i}</a></li>`
-        }
-        $("#pagination-nav .pagination").innerHTML += 
-        `<li class="page-item"><a class="page-link" href="#">${Math.floor(totalItemsCount/10)+1}</a></li>`
-
-
-        $("#pagination-nav").hidden = false;
-      }, 1000 );
     }
     
+}
+
+function getDocHeight() {
+  var D = document;
+  return Math.max(
+      D.body.scrollHeight, D.documentElement.scrollHeight,
+      D.body.offsetHeight, D.documentElement.offsetHeight,
+      D.body.clientHeight, D.documentElement.clientHeight
+  );
 }
 
 let lastScroll = window.scrollY;
@@ -205,4 +214,25 @@ addEventListener("scroll", (event) => {
   let newTop = Math.max( -300, lastTop - delta );
   newTop = Math.min(0, newTop);
   $(".page-header").style.top = `${newTop}px`;
+
+  if ( window.scrollY + window.innerHeight >= getDocHeight()-20 && searchResults ) {
+    loadAnotherPage();
+  }
 });
+
+function popAlert(title, content, lifetime, type="prime")
+{
+  const el = document.createElement("div");
+  el.innerHTML = 
+  `
+  <div class="alert-${type}">
+    <div class="alert-title">${title}</div>
+    <div class="alert-content">${content}</div>
+  </div>
+  `
+  const node = el.childNodes[1];
+  document.body.appendChild(node);
+  setTimeout( () => {
+    node.remove();
+  }, lifetime )
+}

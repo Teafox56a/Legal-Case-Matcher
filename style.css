@@ -1,14 +1,13 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css");
-
-
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&display=swap');
 a { text-decoration: none; color: inherit; }
-html, body { height: 100%; width: 100%; margin: 0; font-family: Arial, Helvetica, sans-serif;}
+html, body { height: 100%; width: 100%; margin: 0; font-family: 'Nunito', sans-serif;}
 body::-webkit-scrollbar{
     display: none;
 }
 
 .page-content {
-    height: 100%; 
+    height: 65%; 
     width: 100%;
     display: flex;
     align-items: center;
@@ -27,16 +26,17 @@ body::-webkit-scrollbar{
     display: flex;
     align-items: center;
     flex-direction: column;
-    margin-top: 20%;
+    margin-top: 10%;
     /* transition: all 1700ms cubic-bezier(0.075, 0.82, 0.165, 1),  */
     transition: width 300ms ease-in-out;
     padding: 25px;
-    -webkit-box-shadow: 0px 0px 26px -20px rgba(66, 68, 90, 1);
-    -moz-box-shadow: 0px 0px 26px -20px rgba(66, 68, 90, 1);
-    box-shadow: 0px 0px 26px -20px rgba(66, 68, 90, 1);
-    background-color: rgb(251, 249, 249);
-    border: 1px solid rgb(227, 226, 226);
-    /* border-bottom: 1px solid rgb(227, 226, 226); */
+    /* -webkit-box-shadow: 0px 0px 26px -20px rgba(66, 68, 90, 1); */
+    /* -moz-box-shadow: 0px 0px 26px -20px rgba(66, 68, 90, 1); */
+    /* box-shadow: 0px 0px 26px -20px rgba(66, 68, 90, 1); */
+    /* background-color: rgb(251, 249, 249); */
+    /* border: 1px solid rgb(227, 226, 226); */
+    border-bottom: 1px solid rgb(227, 226, 226);
+    background-color: white;
 }
 
 .page-content-on-top {
@@ -60,6 +60,7 @@ body::-webkit-scrollbar{
     transition: all 100ms linear;
     margin-top: 25px;
     height: 120px;
+    overflow: hidden;
 }
 
 @keyframes fadeIn {
@@ -206,4 +207,30 @@ body::-webkit-scrollbar{
     cursor: pointer;
     color: rgb(207, 207, 207);
     font-size: 2.1rem;
+}
+
+.alert-prime { 
+    background-color: rgb(78, 194, 93);
+    padding: 14px;
+    position: fixed;
+    z-index: 9999999999;
+    left: 15px;
+    top: 15px;
+    width: 300px;
+    height: 100px;
+    color: white;
+    -webkit-box-shadow: 0px 0px 14px 0px rgba(90, 92, 111, 0.33);
+    -moz-box-shadow: 0px 0px 14px 0px rgba(90, 92, 111, 0.33);
+    box-shadow: 0px 0px 14px 0px rgba(90, 92, 111, 0.33);
+    border-radius: 8px;
+    animation: 0.5s fadeIn;
+}
+
+.alert-title { 
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.alert-description { 
+    font-size: 12px;
 }
