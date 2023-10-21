@@ -1,0 +1,12 @@
+* {
+    color: rgb(197, 219, 245) !important;
+    font-family: "Lato";
+}
+
+body {
+    background-color: rgb(47, 50, 58);
+}
+
+.page-header {
+    background-color: rgb(47, 50, 58);
+}
