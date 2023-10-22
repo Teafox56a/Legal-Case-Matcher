@@ -219,16 +219,15 @@ function onArticleClick(e, i)
 
 lastQueryData = [];
 
-async function fetchQuery(query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy)
+async function fetchQuery(query, judge, sad, rodzajOrzeczenia, podstawaprawna)
 {
-  lastQueryData = [query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy];
-  // const receivedData = await (fetch(
-  //   `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=${lastPage}&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC&ccCourtName=${sad}&judgmentTypes=${rodzajOrzeczenia}`
-  // ).then( e => e.json() ))
-  // const receivedData = await (fetch(
-  //   `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=0&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC`
-  // ).then( e => e.json() ))
-  const receivedData = dummyData;
+  lastQueryData = [query, judge, sad, rodzajOrzeczenia, podstawaprawna];
+  const receivedData = await (fetch(
+    `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=${lastPage}&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC&ccCourtName=${sad}&judgmentTypes=${rodzajOrzeczenia == "Dowolne"? "":rodzajOrzeczenia}&legalBase=${podstawaprawna}&
+    judgeName=${judge}`
+  ).then( e => e.json() ))
+
+  // const receivedData = dummyData;
   totalItemsCount = receivedData.info.totalResults;
   console.log(receivedData)
   for ( let block of receivedData.items ) {
@@ -275,8 +274,6 @@ function ptoe(name)
   
   
   
-  
-}
 
 let searchResults = false;
 function search()
@@ -285,11 +282,11 @@ function search()
   lockPageBusy();
   fetched_data = [];
   const query = $("#search-bar").value;
-  const sygnatura = $("#sygnatura").value;
+  const judge = $("#judge").value;
   const sad = $("#sad").value;
   const rodzajOrzeczenia = ptoe($("#rodzaj-orzeczenia").value);
-  const symbolSprawy = $("#symbol-sprawy").value;
-  fetchQuery(query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy).then( displayResults );
+  const podstawaprawna = $("#podstawa-prawna").value;
+  fetchQuery(query, judge, sad, rodzajOrzeczenia, podstawaprawna).then( displayResults );
   // console.log(query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy)
   $("#main-page-header").remove();
 }
