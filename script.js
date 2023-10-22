@@ -79,13 +79,13 @@ async function fetchQuery(query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy)
 {
   // totalItemsCount = 10;
   lastQueryData = [query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy];
-  // const receivedData = await (fetch(
-  //   `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=${lastPage}&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC`
-  // ).then( e => e.json() ))
+  const receivedData = await (fetch(
+    `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=${lastPage}&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC`
+  ).then( e => e.json() ))
   // const receivedData = await (fetch(
   //   `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=0&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC`
   // ).then( e => e.json() ))
-  const receivedData = dummyData;
+  // const receivedData = dummyData;
   totalItemsCount = receivedData.info.totalResults;
   data = [];
   console.log(receivedData)
