@@ -373,3 +373,30 @@ input, select, label, span, input:focus, select:focus {
 .search-list-element>.text-content {
     padding: 8px;
 }
+
+.bookmarks-btn {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    border: 2px solid var(--dark);
+    color: var(--dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 1.2rem;
+    -webkit-box-shadow: 0px 0px 26px -20px rgba(66, 68, 90, 1);
+    -moz-box-shadow: 0px 0px 26px -20px rgba(66, 68, 90, 1);
+    box-shadow: 0px 0px 26px -20px rgba(66, 68, 90, 1);
+    transition: all 0.1s linear;
+}
+
+.bookmarks-btn:hover .bookmarks-btn-selected {
+    cursor: pointer;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    background-color: var(--dark);
+}
