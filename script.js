@@ -54,6 +54,35 @@ function hideArticle()
 
 function generateArticle(i, title, description, more)
 { 
+    return `<div onclick="onArticleClick(event, ${i})" class="search-list-element search-result-element-transition">
+        <div class="header">
+            <div class="header-top">
+                <div>{Sad}</div>
+                <div>{Wydzial}</div>
+                <div style="flex-grow: 1;"></div> 
+                <div>${data[i].judgmentDate}</div>
+            </div>
+            <div class="header-main">
+                <div>{Wyrok}</div>
+                <div>${title}</div>
+            </div>
+        </div>
+        <div class="metadata">
+            <div class="jury-data">
+            Skłąd sędziowski: ${data[i].judges.map( e=>e.name ).join("<br>")}
+            Skłąd sędziowski: ${data[i].judges.map( e=>e.name ).join("<br>")}
+            </div>
+            <div class="articles">
+                <p>{art_1}</p>
+                <p>{art_2}</p>
+                <p>{art_3}</p>
+            </div>
+        </div>
+        <div class="text-content">
+            ${data[i].textContent}
+        </div>
+    </div>
+    `
     return `<div onclick="onArticleClick(event, ${i})" class="search-result-element search-result-element-transition">
         <div class="title">${title}</div>
         <div class="description">${description}</div>
@@ -97,13 +126,13 @@ async function fetchQuery(query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy)
 {
   // totalItemsCount = 10;
   lastQueryData = [query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy];
-  // const receivedData = await (fetch(
-  //   `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=${lastPage}&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC`
-  // ).then( e => e.json() ))
+  const receivedData = await (fetch(
+    `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=${lastPage}&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC`
+  ).then( e => e.json() ))
   // const receivedData = await (fetch(
   //   `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=0&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC`
   // ).then( e => e.json() ))
-  const receivedData = dummyData;
+  // const receivedData = dummyData;
   totalItemsCount = receivedData.info.totalResults;
   data = [];
   console.log(receivedData)
@@ -215,7 +244,7 @@ addEventListener("scroll", (event) => {
   newTop = Math.min(0, newTop);
   $(".page-header").style.top = `${newTop}px`;
 
-  if ( !maximizeArticle && !doNotLoadOnScroll && window.scrollY + window.innerHeight >= getDocHeight()-20 && searchResults ) {
+  if ( !articleMaximized && !doNotLoadOnScroll && window.scrollY + window.innerHeight >= getDocHeight()-20 && searchResults ) {
     loadAnotherPage();
   }
 });
