@@ -21,6 +21,7 @@ let fetched_data = []
 let doNotLoadOnScroll = false;
 let articleMaximized = false;
 let bookmarks = false;
+let opened;
 
 function showBookmarks()
 {
@@ -78,6 +79,11 @@ function hideArticle()
   $(".page-content").style.width = "100%";
   $(".page-content").style.left = "0";
   $(".page-header").style.width = "100%";
+
+  if(opened !== undefined && $("#article-"+opened).classList.contains("opened"))
+  {
+    $("#article-"+opened).classList.remove("opened");
+  }
 }
 
 function saveArticle()
@@ -162,8 +168,8 @@ function generateArticle(i, val)
     return `<div onclick="onArticleClick(event, ${i})" class="search-list-element search-result-element-transition ${val.saved? "saved" : ""}" id="article-${i}">
         <div class="header">
             <div class="header-top">
-                <div>{Sad}</div>
-                <div>{Wydzial}</div>
+                <div>${val.division.court.name}</div>
+                <div>${val.division.name}</div>
                 <div style="flex-grow: 1;"></div> 
                 <div>${val.judgmentDate}</div>
             </div>
@@ -225,11 +231,13 @@ function onArticleClick(e, i)
   
   
   showArticle();
-  if (e.currentTarget.childNodes[5].classList.contains("opened")) {
-    e.currentTarget.childNodes[5].classList.remove("opened")
-  } else {
-    e.currentTarget.childNodes[5].classList.add("opened")
+  if(opened !== undefined && $("#article-"+opened).classList.contains("opened"))
+  {
+    $("#article-"+opened).classList.remove("opened");
   }
+    $("#article-"+i).classList.add("opened");
+    opened = i;
+  
 
   fetchDetails(i).then(() => $(".article-lookup").innerHTML = detailedData.data.textContent);
 }
