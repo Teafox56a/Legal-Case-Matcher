@@ -14,10 +14,35 @@ $(".more-options-button").addEventListener("click", () => {
 
 let lastPage = 0;
 let totalItemsCount = 0;
-let data = []
-let detailedData = {}
+let data = [];
+let detailedData = {};
+let savedData = {};
+let fetched_data = []
 let doNotLoadOnScroll = false;
 let articleMaximized = false;
+let bookmarks = false;
+
+function showBookmarks()
+{
+  if(bookmarks){
+    bookmarks = false;
+    data = fetched_data
+  }else{
+    bookmarks = true;
+    loadSaveData()
+  } 
+  displayResults();
+}
+
+function loadSaveData()
+{
+  let tab = [];
+  for(let d in savedData)
+  {
+    tab.push(savedData[d]);
+  }
+  data = tab;
+}
 
 function maximizeArticle()
 {
@@ -53,38 +78,110 @@ function hideArticle()
   $(".page-header").style.width = "100%";
 }
 
-function generateArticle(i, title, description, more)
-{ 
-    return `<div onclick="onArticleClick(event, ${i})" class="search-list-element search-result-element-transition">
+function saveArticle()
+{
+  let index;
+  let val = data.find((value, i) => 
+  {
+    if(value.id == detailedData.data.id)
+    {
+      index = i;
+      return true;
+    }
+    return false;
+  })
+
+
+  if(val.saved)
+  {
+    console.log("del:")
+    console.log(val)
+    val.saved = false;
+    delete savedData[val.id]
+    localStorage.setItem("savedData", JSON.stringify(savedData))
+    $("#article-"+index).classList.remove("saved");
+  } else {
+    val.saved = true;
+    savedData[val.id] = val;
+    localStorage.setItem("savedData", JSON.stringify(savedData))
+    
+    $("#article-"+index).classList.add("saved");
+  }
+
+  if(bookmarks)
+  {
+    loadSaveData()
+    displayResults(bookmarks);
+  }
+    
+}
+
+function getType(name)
+{
+  if( name == "SENTENCE")
+    return "Wyrok"
+  if( name == "REASONS")
+    return "Uzasadnienie"
+  if( name == "DECISION")
+    return "Postanowienie"
+  if( name == "REGULATION")
+    return "Zarządzenie"
+  if( name == "RESOLUTION")
+    return "Uchwała"
+    return name
+}
+
+function getSad(name)
+{
+  if( name == "COMMON")
+    return "Powszechny"
+  if( name == "SUPREME")
+    return "Najwyższy"
+  if( name == "CONSTITUTIONAL_TRIBUNAL")
+    return "Trybunału Konstytucyjnego"
+  if( name == "NATIONAL_APPEAL_CHAMBER")
+    return "Krajowa Izba Odwoławcza"
+  if( name == "RESOLUTION")
+    return "Ustawa"
+    
+}
+
+function generateArticle(i, val)
+{
+
+  console.log(getType(val.judgmentType));
+  console.log(val)
+  let article = "";
+  if(getType(val.judgmentType) == "Wyrok")
+     val.detailedData.data.legalBases.forEach(e=>{article= article +`<p>${e}</p>`; console.log("e"+e)})
+    console.log(article)
+    return `<div onclick="onArticleClick(event, ${i})" class="search-list-element search-result-element-transition ${val.saved? "saved" : ""}" id="article-${i}">
         <div class="header">
             <div class="header-top">
                 <div>{Sad}</div>
                 <div>{Wydzial}</div>
                 <div style="flex-grow: 1;"></div> 
-                <div>${data[i].judgmentDate}</div>
+                <div>${val.judgmentDate}</div>
             </div>
             <div class="header-main">
-                <div>{Wyrok}</div>
-                <div>${title}</div>
+                <div>${getType(val.judgmentType)}</div>
+                <div>${val.courtCases.map(e=>e.caseNumber).join("; ")}</div>
             </div>
         </div>
         <div class="metadata">
             <div class="jury-data">
-            Skłąd sędziowski: ${data[i].judges.map( e=>e.name ).join("<br>")}
-            Skłąd sędziowski: ${data[i].judges.map( e=>e.name ).join("<br>")}
+            Skład sędziowski: ${val.judges.map( e=>e.name ).join("<br>")}
             </div>
             <div class="articles">
-                <p>{art_1}</p>
-                <p>{art_2}</p>
-                <p>{art_3}</p>
+            ${article}
             </div>
         </div>
         <div class="text-content">
-            ${data[i].textContent}
+        ${val.textContent}
         </div>
     </div>
     `
-    return `<div onclick="onArticleClick(event, ${i})" class="search-result-element search-result-element-transition">
+    return `<div onclick="onArticleClick(event, ${i})" class="search-result-element search-result-element-transition id="article-${i}">
         <div class="title">${title}</div>
         <div class="description">${description}</div>
         <div class="more">${more}<div>
@@ -111,7 +208,6 @@ function releasePageBusy()
 function onArticleClick(e, i)
 {
   showArticle();
-
   if (e.currentTarget.childNodes[5].classList.contains("opened")) {
     e.currentTarget.childNodes[5].classList.remove("opened")
   } else {
@@ -125,21 +221,31 @@ lastQueryData = [];
 
 async function fetchQuery(query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy)
 {
-  // totalItemsCount = 10;
   lastQueryData = [query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy];
-  const receivedData = await (fetch(
-    `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=${lastPage}&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC`
-  ).then( e => e.json() ))
+  // const receivedData = await (fetch(
+  //   `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=${lastPage}&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC&ccCourtName=${sad}&judgmentTypes=${rodzajOrzeczenia}`
+  // ).then( e => e.json() ))
   // const receivedData = await (fetch(
   //   `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=0&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC`
   // ).then( e => e.json() ))
-  // const receivedData = dummyData;
+  const receivedData = dummyData;
   totalItemsCount = receivedData.info.totalResults;
-  data = [];
   console.log(receivedData)
-  for ( const block of receivedData.items ) {
-    data.push(block)
+  for ( let block of receivedData.items ) {
+    if (savedData[block.id])
+      block = savedData[block.id];
+
+    fetched_data.push(block)
+
+    
+    if(!block.detailedData && getType(block.judgmentType) == "Wyrok")
+    {
+      data = fetched_data;
+      await fetchDetails(data.length - 1);
+    }
+
   }
+  data = fetched_data;
 }
 
 async function loadAnotherPage()
@@ -151,15 +257,37 @@ async function loadAnotherPage()
   popAlert("Załadowano","załadowano dodatkowe orzeczenia", 5000)
 }
 
+function ptoe(name)
+{
+  if( name == "Wyrok")
+    return "SENTENCE"
+  if( name == "Uzasadnienie")
+    return "REASONS"
+  if( name == "Postanowienie")
+    return "DECISION"
+  if( name == "Zarządzenie")
+    return "REGULATION"
+  if( name == "Uchwała")
+    return "RESOLUTION"
+    return name
+}
+  
+  
+  
+  
+  
+}
+
 let searchResults = false;
 function search()
 {
   lastPage = 0;
   lockPageBusy();
+  fetched_data = [];
   const query = $("#search-bar").value;
   const sygnatura = $("#sygnatura").value;
   const sad = $("#sad").value;
-  const rodzajOrzeczenia = $("#rodzaj-orzeczenia").value;
+  const rodzajOrzeczenia = ptoe($("#rodzaj-orzeczenia").value);
   const symbolSprawy = $("#symbol-sprawy").value;
   fetchQuery(query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy).then( displayResults );
   // console.log(query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy)
@@ -193,21 +321,26 @@ function generatePaginationButtons(selectedPage, maxSize, range)
 async function displayResults(clearPrevious=true) 
 {
     releasePageBusy()
+
     searchResults = true;
     if ( clearPrevious ) $(".page-header").style.marginTop = "0%";
     if ( clearPrevious ) $(".search-result-list").innerHTML = ""
     if ( data.length == 0 ) {
       $(".search-result-list").innerHTML = `<div class="no-results"> Nic nie znaleziono... </div>`
     } else {
-      for ( let i = 0; i<data.length; i++ ) {
+      let i = 0
+      for(const val in data){
         await setTimeout(
           () => {
               let p = document.createElement("div");
-              p.innerHTML = generateArticle(i, data[i].courtCases.map(e=>e.caseNumber).join("; "), data[i].textContent, "")
+              p.innerHTML = generateArticle(i, data[val])
               $(".search-result-list").appendChild(p.firstChild);
+              i++;
           }
           , 200*i)
+          
       }
+      
     }
     
 }
@@ -224,17 +357,25 @@ function getDocHeight() {
 
 async function fetchDetails(i)
 {
+  console.log(data);
+  console.log(i);
   const link = data[i].href;
   if(!Object.hasOwn(data[i], "detailedData"))
   {
     const receivedData = await (fetch(link).then( e => e.json() ));
     data[i].detailedData = receivedData;
+    console.log("receivedData")
     console.log(receivedData)
   }
   
   detailedData = data[i].detailedData;
   
 }
+
+if(!localStorage.getItem("savedData"))
+  localStorage.setItem("savedData", JSON.stringify({}));
+else
+  savedData = JSON.parse(localStorage.getItem("savedData"));
 
 let lastScroll = window.scrollY;
 addEventListener("scroll", (event) => {
@@ -244,7 +385,8 @@ addEventListener("scroll", (event) => {
   let newTop = Math.max( -300, lastTop - delta );
   newTop = Math.min(0, newTop);
   $(".page-header").style.top = `${newTop}px`;
-
+  if(bookmarks)
+    return
   if ( !articleMaximized && !doNotLoadOnScroll && window.scrollY + window.innerHeight >= getDocHeight()-20 && searchResults ) {
     loadAnotherPage();
   }

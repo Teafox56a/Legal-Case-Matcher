@@ -10,7 +10,7 @@
 </head>
 <body>
     <div class="bookmarks-btn">
-        <i class="bi bi-bookmarks-fill"></i>
+        <i onclick="showBookmarks()" class="bi bi-bookmarks-fill"></i>
     </div>
     <div class="page-header">
         <div id="main-page-header" style="margin-bottom: 55px; display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 15px;">
@@ -29,80 +29,21 @@
                 <input type="text" class="form-control" id="sygnatura" placeholder="Wpisz tutaj">
             </div>
             <div class="input-group mb-3">
-                <label class="input-group-text" for="sad">Sąd</label>
-                <select class="form-select" id="sad">
-                    <option value="dowolny" selected>dowolny</option>
-                    
-                    <option value="Naczelny Sąd Administracyjny">Naczelny Sąd Administracyjny</option>
-                    
-                    <option value="Wojewódzki Sąd Administracyjny w Białymstoku">Wojewódzki Sąd Administracyjny w Białymstoku</option>
-                    
-                    <option value="Wojewódzki Sąd Administracyjny w Bydgoszczy">Wojewódzki Sąd Administracyjny w Bydgoszczy</option>
-                    
-                    <option value="Wojewódzki Sąd Administracyjny w Gdańsku">Wojewódzki Sąd Administracyjny w Gdańsku</option>
-                    
-                    <option value="Wojewódzki Sąd Administracyjny w Gliwicach">Wojewódzki Sąd Administracyjny w Gliwicach</option>
-                
-                    <option value="Wojewódzki Sąd Administracyjny w Gorzowie Wlkp.">Wojewódzki Sąd Administracyjny w Gorzowie Wlkp.</option>
-                
-                    <option value="Wojewódzki Sąd Administracyjny w Kielcach">Wojewódzki Sąd Administracyjny w Kielcach</option>
-                
-                    <option value="Wojewódzki Sąd Administracyjny w Krakowie">Wojewódzki Sąd Administracyjny w Krakowie</option>
-                
-                    <option value="Wojewódzki Sąd Administracyjny w Lublinie">Wojewódzki Sąd Administracyjny w Lublinie</option>
-                
-                    <option value="Wojewódzki Sąd Administracyjny w Łodzi">Wojewódzki Sąd Administracyjny w Łodzi</option>
-                
-                    <option value="Wojewódzki Sąd Administracyjny w Olsztynie">Wojewódzki Sąd Administracyjny w Olsztynie</option>
-                
-                    <option value="Wojewódzki Sąd Administracyjny w Opolu">Wojewódzki Sąd Administracyjny w Opolu</option>
-                
-                    <option value="Wojewódzki Sąd Administracyjny w Poznaniu">Wojewódzki Sąd Administracyjny w Poznaniu</option>
-                
-                    <option value="Wojewódzki Sąd Administracyjny w Rzeszowie">Wojewódzki Sąd Administracyjny w Rzeszowie</option>
-                
-                    <option value="Wojewódzki Sąd Administracyjny w Szczecinie">Wojewódzki Sąd Administracyjny w Szczecinie</option>
-                
-                    <option value="Wojewódzki Sąd Administracyjny w Warszawie">Wojewódzki Sąd Administracyjny w Warszawie</option>
-                
-                    <option value="Wojewódzki Sąd Administracyjny we Wrocławiu">Wojewódzki Sąd Administracyjny we Wrocławiu</option>
-                
-                    <option value="NSA w Warszawie (przed reformą)">NSA w Warszawie (przed reformą)</option>
-                
-                    <option value="NSA oz. w Białymstoku">NSA oz. w Białymstoku</option>
-                
-                    <option value="NSA oz. w Bydgoszczy">NSA oz. w Bydgoszczy</option>
-                
-                    <option value="NSA oz. w Gdańsku">NSA oz. w Gdańsku</option>
-                
-                    <option value="NSA oz. w Katowicach">NSA oz. w Katowicach</option>
-                
-                    <option value="NSA oz. w Krakowie">NSA oz. w Krakowie</option>
-                
-                    <option value="NSA oz. w Lublinie">NSA oz. w Lublinie</option>
-                
-                    <option value="NSA oz. w Łodzi">NSA oz. w Łodzi</option>
-                
-                    <option value="NSA oz. w Poznaniu">NSA oz. w Poznaniu</option>
-                
-                    <option value="NSA oz. w Rzeszowie">NSA oz. w Rzeszowie</option>
-                
-                    <option value="NSA oz. w Szczecinie">NSA oz. w Szczecinie</option>
-                
-                    <option value="NSA oz. we Wrocławiu">NSA oz. we Wrocławiu</option>
-                </select>
+                <span class="input-group-text">Sąd</span>
+                <input type="text" class="form-control" id="sad" placeholder="Wpisz tutaj">
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text" for="rodzaj-orzeczenia">Rodzaj orzeczenia</label>
                 <select class="form-select" id="rodzaj-orzeczenia" >
-                  <option selected>dowolny</option>
                   <option selected>Wyrok</option>
+                  <option selected>Zarządzenie</option>
                   <option selected>Postanowienie</option>
                   <option selected>Uchwała</option>
+                  <option selected>Uzasadnienie</option>
                 </select>
             </div>
             <div class="input-group mb-3">
-                <span class="input-group-text" id="basic-addon1">Symbol sprawy</span>
+                <span class="input-group-text" id="basic-addon2">Symbol sprawy</span>
                 <input type="text" class="form-control" id="symbol-sprawy" placeholder="Wpisz tutaj">
             </div>
         </div>
@@ -142,7 +83,7 @@
             <div style="flex-grow: 1;">
                 <i id="article-maximize-arrow" onclick="maximizeArticle()" class="bi bi-arrow-left maximize-article-btn"></i>
             </div>
-            <i class="bi bi-bookmark article-bookmark-btn"></i>
+            <i onclick="saveArticle()"class="bi bi-bookmark article-bookmark-btn"></i>
             <i onclick="hideArticle()" class="bi bi-arrow-return-right article-hide-btn"></i>
         </div>
         <div class="article-lookup"></div>
