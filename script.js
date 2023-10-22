@@ -32,6 +32,8 @@ function showBookmarks()
     loadSaveData()
   } 
   displayResults();
+
+  
 }
 
 function loadSaveData()
@@ -94,17 +96,19 @@ function saveArticle()
 
   if(val.saved)
   {
-    console.log("del:")
-    console.log(val)
     val.saved = false;
     delete savedData[val.id]
     localStorage.setItem("savedData", JSON.stringify(savedData))
     $("#article-"+index).classList.remove("saved");
+    $(".article-bookmark-btn").classList.remove("bi-bookmark-fill")
+    $(".article-bookmark-btn").classList.add("bi-bookmark")
   } else {
+    
     val.saved = true;
     savedData[val.id] = val;
     localStorage.setItem("savedData", JSON.stringify(savedData))
-    
+    $(".article-bookmark-btn").classList.add("bi-bookmark-fill")
+    $(".article-bookmark-btn").classList.remove("bi-bookmark")
     $("#article-"+index).classList.add("saved");
   }
 
@@ -113,7 +117,7 @@ function saveArticle()
     loadSaveData()
     displayResults(bookmarks);
   }
-    
+  
 }
 
 function getType(name)
@@ -207,6 +211,19 @@ function releasePageBusy()
 
 function onArticleClick(e, i)
 {
+  if(data[i].saved &&  $(".article-bookmark-btn").classList.contains("bi-bookmark"))
+  {
+    $(".article-bookmark-btn").classList.add("bi-bookmark-fill")
+    $(".article-bookmark-btn").classList.remove("bi-bookmark")
+  }
+
+  if(!data[i].saved &&  $(".article-bookmark-btn").classList.contains("bi-bookmark-fill"))
+  {
+    $(".article-bookmark-btn").classList.remove("bi-bookmark-fill")
+    $(".article-bookmark-btn").classList.add("bi-bookmark")
+  }
+  
+  
   showArticle();
   if (e.currentTarget.childNodes[5].classList.contains("opened")) {
     e.currentTarget.childNodes[5].classList.remove("opened")
@@ -219,12 +236,11 @@ function onArticleClick(e, i)
 
 lastQueryData = [];
 
-async function fetchQuery(query, judge, sad, rodzajOrzeczenia, podstawaprawna)
+async function fetchQuery(query, sygnatura, sad, rodzajOrzeczenia, legalBase)
 {
-  lastQueryData = [query, judge, sad, rodzajOrzeczenia, podstawaprawna];
+  lastQueryData = [query, sygnatura, sad, rodzajOrzeczenia, legalBase];
   const receivedData = await (fetch(
-    `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=${lastPage}&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC&ccCourtName=${sad}&judgmentTypes=${rodzajOrzeczenia == "Dowolne"? "":rodzajOrzeczenia}&legalBase=${podstawaprawna}&
-    judgeName=${judge}`
+    `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=${lastPage}&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC&ccCourtName=${sad}&judgmentTypes=${rodzajOrzeczenia == "Dowolne"? "":rodzajOrzeczenia}&legalBase=${legalBase}&judgeName=${sygnatura}`
   ).then( e => e.json() ))
 
   // const receivedData = dummyData;
@@ -282,11 +298,11 @@ function search()
   lockPageBusy();
   fetched_data = [];
   const query = $("#search-bar").value;
-  const judge = $("#judge").value;
+  const sygnatura = $("#sygnatura").value;
   const sad = $("#sad").value;
   const rodzajOrzeczenia = ptoe($("#rodzaj-orzeczenia").value);
-  const podstawaprawna = $("#podstawa-prawna").value;
-  fetchQuery(query, judge, sad, rodzajOrzeczenia, podstawaprawna).then( displayResults );
+  const symbolSprawy = $("#symbol-sprawy").value;
+  fetchQuery(query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy).then( displayResults );
   // console.log(query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy)
   $("#main-page-header").remove();
 }

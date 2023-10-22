@@ -224,6 +224,10 @@ body::-webkit-scrollbar{
     font-size: 2.1rem;
 }
 
+.bookmarked{
+    background-color: black;
+}
+
 .alert-prime { 
     background-color: rgb(78, 194, 93);
     padding: 14px;
