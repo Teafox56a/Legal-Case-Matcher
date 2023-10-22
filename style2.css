@@ -284,3 +284,13 @@ input, select, label, span, input:focus, select:focus {
 .alert-description { 
     font-size: 12px;
 }
+
+.article-lookup h2 {
+    border-bottom: 1px solid var(--dark);
+    margin-top: 15px;
+}
+
+.article-lookup a {
+    color: rgb(46, 46, 156);
+    border-bottom: 1px solid rgb(46, 46, 156);
+}

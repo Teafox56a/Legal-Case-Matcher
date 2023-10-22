@@ -215,7 +215,7 @@ addEventListener("scroll", (event) => {
   newTop = Math.min(0, newTop);
   $(".page-header").style.top = `${newTop}px`;
 
-  if ( !doNotLoadOnScroll && window.scrollY + window.innerHeight >= getDocHeight()-20 && searchResults ) {
+  if ( !maximizeArticle && !doNotLoadOnScroll && window.scrollY + window.innerHeight >= getDocHeight()-20 && searchResults ) {
     loadAnotherPage();
   }
 });
