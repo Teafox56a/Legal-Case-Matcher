@@ -33,6 +33,7 @@ function maximizeArticle()
   $(".page-header").style.width = articleMaximized ? "0" : "47%";
   $(".page-header").style.padding = articleMaximized ? "0" : "15px";
   $(".article-wrapper").style.width = articleMaximized ? "98%" : "50%";
+  $(".bookmarks-btn").style.left = articleMaximized ? "-65px" : "15px";
 }
 
 function showArticle()
@@ -162,7 +163,7 @@ function search()
   const symbolSprawy = $("#symbol-sprawy").value;
   fetchQuery(query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy).then( displayResults );
   // console.log(query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy)
-  
+  $("#main-page-header").remove();
 }
 
 
