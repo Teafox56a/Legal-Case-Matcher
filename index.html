@@ -13,7 +13,7 @@
         <div style="margin-bottom: 55px; display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 15px;">
             <h2>Wyszukiwarka orzeczeń </h2>
         </div>
-        <div class="input-group mb-3" style="width: 50%;">
+        <div class="input-group mb-3" style="width: 35vw;">
             <span class="input-group-text" id="search-bar-icon">
                 <i class="bi bi-search"></i>    
                 <div hidden style="width: 1.5rem; height: 1.5rem;" class="spinner-border text-secondary" role="status"></div> 
@@ -119,6 +119,9 @@
     </div>
     <div class="article-wrapper">
         <div class="article-toolbar">
+            <div style="flex-grow: 1;">
+                <i id="article-maximize-arrow" onclick="maximizeArticle()" class="bi bi-arrow-left maximize-article-btn"></i>
+            </div>
             <i class="bi bi-bookmark article-bookmark-btn"></i>
             <i onclick="hideArticle()" class="bi bi-arrow-return-right article-hide-btn"></i>
         </div>

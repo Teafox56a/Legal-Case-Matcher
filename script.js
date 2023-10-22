@@ -17,6 +17,23 @@ let totalItemsCount = 0;
 let data = []
 let detailedData = {}
 let doNotLoadOnScroll = false;
+let articleMaximized = false;
+
+function maximizeArticle()
+{
+  articleMaximized = !articleMaximized;
+  if ( articleMaximized ) {
+    $("#article-maximize-arrow").classList.remove("bi-arrow-left")
+    $("#article-maximize-arrow").classList.add("bi-arrow-right")
+  } else {
+    $("#article-maximize-arrow").classList.add("bi-arrow-left")
+    $("#article-maximize-arrow").classList.remove("bi-arrow-right")
+  }
+  $(".page-content").style.left = articleMaximized ? "-1000px" : "15px";
+  $(".page-header").style.width = articleMaximized ? "0" : "47%";
+  $(".page-header").style.padding = articleMaximized ? "0" : "15px";
+  $(".article-wrapper").style.width = articleMaximized ? "98%" : "50%";
+}
 
 function showArticle()
 {
@@ -28,6 +45,7 @@ function showArticle()
 
 function hideArticle()
 {
+  if ( articleMaximized ) maximizeArticle();
   $(".article-wrapper").style.right = "-50%";
   $(".page-content").style.width = "100%";
   $(".page-content").style.left = "0";
@@ -79,13 +97,13 @@ async function fetchQuery(query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy)
 {
   // totalItemsCount = 10;
   lastQueryData = [query, sygnatura, sad, rodzajOrzeczenia, symbolSprawy];
-  const receivedData = await (fetch(
-    `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=${lastPage}&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC`
-  ).then( e => e.json() ))
+  // const receivedData = await (fetch(
+  //   `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=${lastPage}&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC`
+  // ).then( e => e.json() ))
   // const receivedData = await (fetch(
   //   `https://www.saos.org.pl/api/search/judgments?pageSize=10&pageNumber=0&all=${query}&sortingField=JUDGMENT_DATE&sortingDirection=DESC`
   // ).then( e => e.json() ))
-  // const receivedData = dummyData;
+  const receivedData = dummyData;
   totalItemsCount = receivedData.info.totalResults;
   data = [];
   console.log(receivedData)
